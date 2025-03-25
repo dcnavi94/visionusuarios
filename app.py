@@ -66,14 +66,14 @@ def train_model():
     #Entrenar el modelo
     face_recognizer.train(data, np.array(labels))
     #Ruta de guardado del modelo
-    face_recognizer.write("model/LBPHFace.xml")
+    face_recognizer.write("model/ModeloLBPHFace.xml")
     print("Modelo entrenado con éxito")
 
 #registro de asistencias 
 def registrar_asistencias():
     face_recognizer = cv.face.LBPHFaceRecognizer_create()
     try:
-        face_recognizer.read("model/LBPHFace.xml")
+        face_recognizer.read("model/ModeloLBPHFace.xml")
     except Exception as e:
         print("Error al cargar el modelo:", e)
         return
