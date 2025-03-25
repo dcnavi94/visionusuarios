@@ -42,32 +42,48 @@ def registrar_rostros():
 
 #Entrenar el modelo con esos rostros 
 def train_model():
-    #Training LBPHFace 
+    # Training LBPHFace 
     print("Entrenando el modelo...")
     face_recognizer = cv.face.LBPHFaceRecognizer_create()
-    #Dataset: 
-    # imagnes y son etiquetas 
+
+    # Dataset: imágenes y etiquetas
     data = []
     labels = []
-    #Ruta de Usuarios
-    base_dir = "users_faces"
+
+    # Ruta de Usuarios
+    base_dir = "user_faces"
+
     for user_folder in os.listdir(base_dir):
-        user_path = os.path.join(base_dir,user_folder)
+        user_path = os.path.join(base_dir, user_folder)  # Corregido
+
         if os.path.isdir(user_path):
-            #Extraer el dni del nombre de la carpeta para convertirlo en label y asignarlo a su conjunto de imagenes
-            label = int(user_folder)
+            try:
+                label = int(user_folder)  # Convertimos el DNI a número
+            except ValueError:
+                print(f"Advertencia: La carpeta '{user_folder}' no tiene un DNI válido.")
+                continue  # Si el nombre de la carpeta no es un número, la ignoramos
+
             for image_file in os.listdir(user_path):
-                image_path = os.path.join(user_path,image_file)
-                image = cv.imread(image_path,cv.IMREAD_GRAYSCALE)
+                image_path = os.path.join(user_path, image_file)
+                image = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
+
                 if image is not None:
                     data.append(image)
                     labels.append(label)
-        
-    #Entrenar el modelo
+
+    if len(data) == 0 or len(labels) == 0:
+        print("No hay imágenes disponibles para entrenar el modelo.")
+        return
+
+    # Entrenar el modelo
     face_recognizer.train(data, np.array(labels))
-    #Ruta de guardado del modelo
+
+    # Ruta de guardado del modelo
+    os.makedirs("model", exist_ok=True)  # Crear la carpeta si no existe
     face_recognizer.write("model/ModeloLBPHFace.xml")
+
     print("Modelo entrenado con éxito")
+
 
 #registro de asistencias 
 def registrar_asistencias():
