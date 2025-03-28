@@ -15,7 +15,7 @@ def registrar_rostros():
     #Detector de rostros 
     contador = 0
     face_detector = cv.CascadeClassifier(cv.data.haarcascades + "haarcascade_frontalface_default.xml") 
-    while contador < 100 : 
+    while contador < 1000 : 
         ret,frame = cap.read()
         if not ret:
             break
